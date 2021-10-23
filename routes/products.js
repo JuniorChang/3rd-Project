@@ -2,14 +2,21 @@ const express = require("express");
 const router = express.Router();
 
 // #1 import in the Product model
-const { Product } = require("../models");
+const {
+  Product
+} = require("../models");
 
 // import in the Forms
-const { bootstrapField, createProductForm } = require("../forms");
+const {
+  bootstrapField,
+  createProductForm
+} = require("../forms");
 
 router.get("/", async (req, res) => {
   // #2 - fetch all the products (ie, SELECT * from products)
-  let products = await Product.collection().fetch();
+  let products = await Product.collection().fetch({
+    withRelated:['category']
+  });
   res.render("products/index", {
     products: products.toJSON(), // #3 - convert collection to JSON
   });
@@ -51,6 +58,10 @@ router.get("/:product_id/update", async (req, res) => {
     require: true,
   });
 
+  const allCategories = await Category.fetchAll().map((category) => {
+    return [category.get('id'), category.get('name')];
+  })
+
   const productForm = createProductForm();
 
   // fill in the existing values
@@ -65,6 +76,11 @@ router.get("/:product_id/update", async (req, res) => {
 });
 
 router.post("/:product_id/update", async (req, res) => {
+  // fetch all the categories
+  const allCategories = await Category.fetchAll().map((category) => {
+    return [category.get('id'), category.get('name')];
+  })
+
   // fetch the product that we want to update
   const product = await Product.where({
     id: req.params.product_id,
@@ -73,7 +89,7 @@ router.post("/:product_id/update", async (req, res) => {
   });
 
   // process the form
-  const productForm = createProductForm();
+  const productForm = createProductForm(allCategories);
   productForm.handle(req, {
     success: async (form) => {
       product.set(form.data);
@@ -83,7 +99,6 @@ router.post("/:product_id/update", async (req, res) => {
     error: async (form) => {
       res.render("products/update", {
         form: form.toHTML(bootstrapField),
-        product: product.toJSON(),
       });
     },
   });

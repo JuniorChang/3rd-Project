@@ -15,4 +15,6 @@ const Category = bookshelf.model("Category", {
 });
 
 
-module.exports = { Product, Category };
+
+
+module.exports = { Product, Category};
