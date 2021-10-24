@@ -35,6 +35,8 @@ const createProductForm = (categories) => {
       cssClasses: {
         label: ["form-label"],
       },
+      widget: widgets.select(),
+      choices: categories
     }),
   });
 };

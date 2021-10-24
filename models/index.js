@@ -22,7 +22,7 @@ const Category = bookshelf.model("Category", {
 const country = bookshelf.model("country",{
   tableName:"countries",
   products() {
-    return this.hasMany("Products")
+    return this.hasMany("Product")
   }
 })
 

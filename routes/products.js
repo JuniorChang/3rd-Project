@@ -15,7 +15,7 @@ const {
 router.get("/", async (req, res) => {
   // #2 - fetch all the products (ie, SELECT * from products)
   let products = await Product.collection().fetch({
-    withRelated:['category','country']
+    withRelated:['category']
   });
   res.render("products/index", {
     products: products.toJSON(), // #3 - convert collection to JSON
@@ -62,12 +62,13 @@ router.get("/:product_id/update", async (req, res) => {
     return [category.get('id'), category.get('name')];
   })
 
-  const productForm = createProductForm();
+  const productForm = createProductForm(allCategories);
 
   // fill in the existing values
   productForm.fields.name.value = product.get("name");
   productForm.fields.cost.value = product.get("cost");
   productForm.fields.description.value = product.get("description");
+  productForm.fields.category_id.value = product.get('category_id');
 
   res.render("products/update", {
     form: productForm.toHTML(bootstrapField),
