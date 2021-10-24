@@ -7,6 +7,9 @@ const Product = bookshelf.model("Product", {
   },
   country(){
     return this.belongsTo("country");
+  },
+  intensity(){
+    return this.belongsTo("intensity");
   }
 });
 
@@ -26,7 +29,14 @@ const country = bookshelf.model("country",{
   }
 })
 
+const intensity = bookshelf.model('intensity',{
+  tableName: 'intensity',
+  products(){
+    return this.hasMany("Products")
+  }
+})
 
 
 
-module.exports = { Product, Category, country};
+
+module.exports = { Product, Category, country, intensity};

@@ -4,7 +4,7 @@ const forms = require("forms");
 const fields = forms.fields;
 const validators = forms.validators;
 
-const createProductForm = (categories) => {
+const createProductForm = (categories, countries, intensity) => {
   return forms.create({
     name: fields.string({
       required: true,
@@ -38,6 +38,22 @@ const createProductForm = (categories) => {
       widget: widgets.select(),
       choices: categories
     }),
+    country_id: fields.string({
+      label:"Country",
+      required:true,
+      errorAfterField: true,
+      cssClasses:{
+        label:["form-label"],
+      }
+    }),
+    intensity_id: fields.string({
+      label:"Intensity",
+      required:true,
+      errorAfterField:true,
+      cssClasses:{
+        label:["form-label"],
+      }
+    })
   });
 };
 
